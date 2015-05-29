@@ -206,7 +206,7 @@ angular.module('ui.calendar', [])
       return {};
     };
   }])
-  .directive('uiCalendar', ['uiCalendarConfig', function(uiCalendarConfig) {
+  .directive('uiCalendar', ['uiCalendarConfig', '$timeout', function(uiCalendarConfig, $timeout) {
     return {
       restrict: 'A',
       scope: {eventSources:'=ngModel',calendarWatchEvent: '&'},
@@ -303,7 +303,7 @@ angular.module('ui.calendar', [])
 
         scope.$watch(getOptions, function(newO,oldO){
             scope.destroy();
-            scope.init();
+            $timeout(scope.init);
         });
       }
     };
