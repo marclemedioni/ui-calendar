@@ -38,7 +38,7 @@ angular.module('ui.calendar', [])
       // @return {String} fingerprint of the event object and its properties
       this.eventFingerprint = function(e) {
         if (!e._id) {
-          e._id = eventSerialId++;
+          e._id = '_fc' + eventSerialId++;
         }
         // This extracts all the information we need from the event. http://jsperf.com/angular-calendar-events-fingerprint/3
         return "" + e._id + (e.id || '') + (e.title || '') + (e.url || '') + (e.start || '') + (e.end || '') +
@@ -276,7 +276,7 @@ angular.module('ui.calendar', [])
         };
 
         eventsWatcher.onAdded = function(event) {
-          calendar.fullCalendar('renderEvent', event, (event.stick ? true : false));
+          calendar.fullCalendar('renderEvent', event, true);
         };
 
         eventsWatcher.onRemoved = function(event) {
@@ -284,6 +284,11 @@ angular.module('ui.calendar', [])
         };
 
         eventsWatcher.onChanged = function(event) {
+          if(angular.isString(event.start)) {
+            event.start = moment(event.start);
+            event.end = event.end ? moment(event.end) : null;
+          }
+
           var clientEvents = calendar.fullCalendar('clientEvents', event._id);
           for (var i = 0; i < clientEvents.length; i++) {
             var clientEvent = clientEvents[i];
